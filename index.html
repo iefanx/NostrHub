@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(80px, 1fr));
+            gap: 0.5rem;
+        }
+        
+        .app-icon {
+            transition: transform 0.2s ease;
+        }
+        
+        .app-card:hover .app-icon {
+            transform: scale(1.05);
+        }
+
+        @media (min-width: 768px) {
+            .app-grid {
+                grid-template-columns: repeat(6, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 min-h-screen text-gray-200">
+    <div class="container mx-auto px-4 py-6">
+        <!-- Header -->
+        <header class="text-center mb-2">
+            <h1 class="text-xl font-bold text-purple-400 mb-2">WebHub</h1>
+            <p class="text-gray-400 text-sm">
+                Your gateway to decentralized applications
+            </p>
+        </header>
+
+        <!-- Search Bar -->
+        <div class="max-w-2xl mx-auto mb-6">
+            <div class="relative">
+                <input type="search" 
+                       placeholder="Search applications..." 
+                       class="w-full bg-gray-800 rounded-lg px-4 py-2.5 pl-10 focus:outline-none focus:ring-2 focus:ring-purple-400 text-sm">
+                <svg class="w-4 h-4 absolute left-3 top-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-3 gap-4 mb-2">
+            <!-- Backup -->
+            <div class="flex flex-col items-center bg-gray-800 rounded-lg p-4 hover:bg-gray-750 transition-colors">
+                <div class="bg-purple-500 bg-opacity-20 p-3 rounded-lg mb-2">
+                    <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+                    </svg>
+                </div>
+                <h3 class="font-medium text-sm">Backup</h3>
+                <p class="text-xs text-gray-400">Nostr Data</p>
+            </div>
+            
+            <!-- Publish -->
+            <div class="flex flex-col items-center bg-gray-800 rounded-lg p-4 hover:bg-gray-750 transition-colors">
+                <div class="bg-blue-500 bg-opacity-20 p-3 rounded-lg mb-2">
+                    <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                    </svg>
+                </div>
+                <h3 class="font-medium text-sm">Publish</h3>
+                <p class="text-xs text-gray-400">Nostr Notes </p>
+            </div>
+            
+            <!-- Purchased -->
+            <div class="flex flex-col items-center bg-gray-800 rounded-lg p-4 hover:bg-gray-750 transition-colors">
+                <div class="bg-pink-500 bg-opacity-20 p-3 rounded-lg mb-2">
+                    <svg class="w-6 h-6 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+                </div>
+                <h3 class="font-medium text-sm">Purchased</h3>
+                <p class="text-xs text-gray-400">zPay Items</p>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex space-x-2 mb-4 border-b border-gray-700">
+            <button class="px-3 py-2 text-sm text-purple-400 border-b-2 border-purple-400">All</button>
+            <button class="px-3 py-2 text-sm text-gray-400 hover:text-gray-200">Utilities</button>
+            <button class="px-3 py-2 text-sm text-gray-400 hover:text-gray-200">Lightning</button>
+            <button class="px-3 py-2 text-sm text-gray-400 hover:text-gray-200">Social</button>
+            
+        </div>
+
+        <!-- Apps Grid -->
+        <div class="app-grid " id="appsGrid">
+            <!-- Apps will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        // Sample apps data - replace with your own websites
+        const apps = [
+            {
+                name: 'AppCore',
+                icon: '⚡',
+                bgColor: 'bg-yellow-500',
+                url: '#'
+            },
+            {
+                name: 'Encrypt Pro',
+                icon: '🛡️',
+                bgColor: 'bg-red-500',
+                url: '#'
+            },
+            {
+                name: 'Ln Invoice',
+                icon: '💎',
+                bgColor: 'bg-blue-500',
+                url: '#'
+            },
+            {
+                name: 'Nostr Notes',
+                icon: '📝',
+                bgColor: 'bg-green-500',
+                url: '#'
+            },
+            {
+                name: 'nSearch',
+                icon: '🔍',
+                bgColor: 'bg-purple-500',
+                url: '#'
+            },
+            {
+                name: 'Nostr Trend',
+                icon: '📊',
+                bgColor: 'bg-indigo-500',
+                url: '#'
+            },
+            {
+                name: 'NostrSync',
+                icon: '⭐',
+                bgColor: 'bg-yellow-500',
+                url: '#'
+            },
+            {
+                name: 'WebCore',
+                icon: '🌟',
+                bgColor: 'bg-orange-500',
+                url: '#'
+            }
+        ];
+
+        // Function to create app cards
+        function createAppCard(app) {
+            return `
+                <a href="${app.url}" class="app-card flex flex-col items-center p-2 hover:bg-gray-800 rounded-lg transition-colors">
+                    <div class="app-icon ${app.bgColor} bg-opacity-20 w-12 h-12 rounded-2xl flex items-center justify-center mb-2 text-2xl">
+                        ${app.icon}
+                    </div>
+                    <h3 class="text-xs font-medium text-center">${app.name}</h3>
+                </a>
+            `;
+        }
+
+        // Render apps
+        document.getElementById('appsGrid').innerHTML = apps.map(createAppCard).join('');
+
+        // Search functionality
+        document.querySelector('input[type="search"]').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredApps = apps.filter(app => 
+                app.name.toLowerCase().includes(searchTerm)
+            );
+            document.getElementById('appsGrid').innerHTML = filteredApps.map(createAppCard).join('');
+        });
+    </script>
+</body>
+</html>
