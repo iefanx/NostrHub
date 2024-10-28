@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nostr Hub</title>
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
+    <style>
+        /* General styles */
+        body {
+            background-color: #000;
+            color: #e5e5e5;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        header h1 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #60a5fa;
+            margin-bottom: 8px;
+        }
+        header p {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 512px;
+            margin: 0 auto 24px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            background-color: #1f2937;
+            border-radius: 8px;
+            padding: 10px 16px 10px 40px;
+            font-size: 0.875rem;
+            color: #e5e5e5;
+            border: none;
+            outline: none;
+        }
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 1rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .quick-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #1f2937;
+            border-radius: 8px;
+            padding: 16px;
+            transition: background-color 0.2s;
+        }
+        .quick-action:hover {
+            background-color: #2d3748;
+        }
+        .quick-action-icon {
+            background-color: rgba(96, 165, 250, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            color: #60a5fa;
+            font-size: 1.5rem;
+        }
+        .quick-action-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .quick-action-description {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #374151;
+        }
+        .nav-tab {
+            padding: 8px 12px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: #9ca3af;
+        }
+        .nav-tab:hover {
+            color: #e5e5e5;
+        }
+        .nav-tab.active {
+            color: #60a5fa;
+            border-color: #60a5fa;
+        }
+
+        /* Apps Grid */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(80px, 1fr));
+            gap: 8px;
+        }
+        .app-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px;
+            background-color: #1f2937;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+        .app-card:hover {
+            background-color: #2d3748;
+        }
+        .app-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 8px;
+        }
+        .app-name {
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .app-grid {
+                grid-template-columns: repeat(6, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>NostrHub</h1>
+            <p>Your gateway to decentralized applications</p>
+        </header>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <input type="search" placeholder="Search applications..." class="search-input">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <div class="quick-action">
+                <div class="quick-action-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <h3 class="quick-action-title">Backup</h3>
+                <p class="quick-action-description">Nostr Data</p>
+            </div>
+            <div class="quick-action">
+                <div class="quick-action-icon"><i class="fas fa-paper-plane"></i></div>
+                <h3 class="quick-action-title">Publish</h3>
+                <p class="quick-action-description">Nostr Notes</p>
+            </div>
+            <div class="quick-action">
+                <div class="quick-action-icon"><i class="fas fa-shopping-cart"></i></div>
+                <h3 class="quick-action-title">Purchased</h3>
+                <p class="quick-action-description">zPay Items</p>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <div class="nav-tab active">All</div>
+            <div class="nav-tab">Utilities</div>
+            <div class="nav-tab">Lightning</div>
+            <div class="nav-tab">Social</div>
+        </div>
+
+        <!-- Apps Grid -->
+        <div class="app-grid" id="appsGrid">
+            <!-- Apps will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        const apps = [
+            { name: 'AppCore', icon: '⚡', bgColor: '#f59e0b', url: '#' },
+            { name: 'Encrypt Pro', icon: '🛡️', bgColor: '#f87171', url: '#' },
+            { name: 'Ln Invoice', icon: '💎', bgColor: '#3b82f6', url: '#' },
+            { name: 'Nostr Notes', icon: '📝', bgColor: '#10b981', url: '#' },
+            { name: 'nSearch', icon: '🔍', bgColor: '#3b82f6', url: '#' },
+            { name: 'Nostr Trend', icon: '📊', bgColor: '#6366f1', url: '#' },
+            { name: 'NostrSync', icon: '⭐', bgColor: '#f59e0b', url: '#' },
+            { name: 'WebCore', icon: '🌟', bgColor: '#fb923c', url: '#' }
+        ];
+
+        function createAppCard(app) {
+            return `
+                <a href="${app.url}" class="app-card">
+                    <div class="app-icon" style="background-color: ${app.bgColor}; opacity: 0.2;">
+                        <span>${app.icon}</span>
+                    </div>
+                    <h3 class="app-name">${app.name}</h3>
+                </a>
+            `;
+        }
+
+        document.getElementById('appsGrid').innerHTML = apps.map(createAppCard).join('');
+
+        document.querySelector('input[type="search"]').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredApps = apps.filter(app => app.name.toLowerCase().includes(searchTerm));
+            document.getElementById('appsGrid').innerHTML = filteredApps.map(createAppCard).join('');
+        });
+    </script>
+</body>
+</html>
