@@ -90,11 +90,14 @@
         }
         .quick-action-title {
             font-size: 0.875rem;
-            font-weight: 500;
+            font-weight: 600;
+            margin: 4px;
         }
         .quick-action-description {
             font-size: 0.75rem;
             color: #9ca3af;
+            margin: 2px;
+            font-weight: 500;
         }
 
         /* Navigation Tabs */
@@ -123,16 +126,16 @@
         .app-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(80px, 1fr));
-            gap: 8px;
+            gap: 6px;
         }
         .app-card {
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 8px;
-            background-color: #1f2937;
+            
             border-radius: 8px;
-            transition: background-color 0.2s;
+      
             text-decoration: none;
             color: inherit;
         }
@@ -147,11 +150,11 @@
             justify-content: center;
             font-size: 1.5rem;
             border-radius: 16px;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
         .app-name {
             font-size: 0.75rem;
-            font-weight: 500;
+            font-weight: 600;
             text-align: center;
         }
 
@@ -224,7 +227,7 @@
         function createAppCard(app) {
             return `
                 <a href="${app.url}" class="app-card">
-                    <div class="app-icon" style="background-color: ${app.bgColor}; opacity: 0.2;">
+                    <div class="app-icon" style="background-color: ${app.bgColor}; ">
                         <span>${app.icon}</span>
                     </div>
                     <h3 class="app-name">${app.name}</h3>
