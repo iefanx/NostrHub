@@ -3,9 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="application/zip+pwa; charset=utf-8">
     <title>Nostr Hub</title>
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#000000"/>
+    <meta name="description" content="Your gateway to decentralized applications"/>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
+
+    <!-- PWA Manifest -->
+    <script>
+        const manifestData = {
+            "name": "Nostr Hub",
+            "short_name": "NostrHub",
+            "start_url": ".",
+            "display": "fullscreen",
+            "background_color": "#000000",
+            "theme_color": "#000000",
+            "description": "Your gateway to decentralized applications",
+            "icons": [
+                {
+                    "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIGZpbGw9IiMwMDAwMDAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzYwQTVGQSIgZm9udC1zaXplPSI4MHB4IiBmb250LXdlaWdodD0iYm9sZCI+Tm9zdHJIdWI8L3RleHQ+PC9zdmc+",
+                    "sizes": "512x512",
+                    "type": "image/svg+xml",
+                    "purpose": "any maskable"
+                }
+            ]
+        };
+
+        const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
+        const manifestURL = URL.createObjectURL(manifestBlob);
+        const manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        manifestLink.href = manifestURL;
+        document.head.appendChild(manifestLink);
+    </script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swScript = `
+                    const CACHE_NAME = 'nostr-hub-v1';
+                    const urlsToCache = [
+                        '/',
+                        window.location.href,
+                        'https://cdn.tailwindcss.com',
+                        'https://use.fontawesome.com/releases/v5.15.4/js/all.js'
+                    ];
+
+                    self.addEventListener('install', (event) => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME)
+                                .then((cache) => cache.addAll(urlsToCache))
+                        );
+                    });
+
+                    self.addEventListener('fetch', (event) => {
+                        event.respondWith(
+                            caches.match(event.request)
+                                .then((response) => response || fetch(event.request))
+                        );
+                    });
+                `;
+
+                const swBlob = new Blob([swScript], { type: 'text/javascript' });
+                const swURL = URL.createObjectURL(swBlob);
+
+                navigator.serviceWorker.register(swURL)
+                    .then(() => console.log('Service Worker registered'))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
+    </script>
+
     <style>
         .app-grid {
             display: grid;
@@ -26,13 +97,41 @@
                 grid-template-columns: repeat(6, minmax(120px, 1fr));
             }
         }
+
+        /* PWA Install Prompt Styles - Matching Existing Theme */
+        #pwaInstallPrompt {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgb(31, 41, 55);
+            border: 1px solid rgb(55, 65, 81);
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 400px;
+        }
     </style>
 </head>
-<body class="bg-gray-900 min-h-screen text-gray-200">
+<body class="bg-black min-h-screen text-gray-200">
+    <!-- PWA Install Prompt -->
+    <div id="pwaInstallPrompt" class="flex items-center justify-between">
+        <div>
+            <h3 class="text-blue-400 font-bold text-sm">Install NostrHub</h3>
+            <p class="text-gray-400 text-xs">Access your decentralized apps instantly</p>
+        </div>
+        <button id="pwaInstallButton" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+            Install
+        </button>
+    </div>
+
     <div class="container mx-auto px-4 py-6">
         <!-- Header -->
         <header class="text-center mb-2">
-            <h1 class="text-xl font-bold text-purple-400 mb-2">NostrHub</h1>
+            <h1 class="text-xl font-bold text-blue-400 mb-2">NostrHub</h1>
             <p class="text-gray-400 text-sm">
                 Your gateway to decentralized applications
             </p>
@@ -43,10 +142,8 @@
             <div class="relative">
                 <input type="search" 
                        placeholder="Search applications..." 
-                       class="w-full bg-gray-800 rounded-lg px-4 py-2.5 pl-10 focus:outline-none focus:ring-2 focus:ring-purple-400 text-sm">
-                <svg class="w-4 h-4 absolute left-3 top-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
+                       class="w-full bg-gray-800 rounded-lg px-4 py-2.5 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm">
+                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
             </div>
         </div>
 
@@ -54,10 +151,8 @@
         <div class="grid grid-cols-3 gap-4 mb-2">
             <!-- Backup -->
             <div class="flex flex-col items-center bg-gray-800 rounded-lg p-4 hover:bg-gray-750 transition-colors">
-                <div class="bg-purple-500 bg-opacity-20 p-3 rounded-lg mb-2">
-                    <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
-                    </svg>
+                <div class="bg-blue-500 bg-opacity-20 p-3 rounded-lg mb-2">
+                    <i class="fas fa-cloud-upload-alt text-blue-400 text-2xl"></i>
                 </div>
                 <h3 class="font-medium text-sm">Backup</h3>
                 <p class="text-xs text-gray-400">Nostr Data</p>
@@ -66,20 +161,16 @@
             <!-- Publish -->
             <div class="flex flex-col items-center bg-gray-800 rounded-lg p-4 hover:bg-gray-750 transition-colors">
                 <div class="bg-blue-500 bg-opacity-20 p-3 rounded-lg mb-2">
-                    <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                    </svg>
+                    <i class="fas fa-paper-plane text-blue-400 text-2xl"></i>
                 </div>
                 <h3 class="font-medium text-sm">Publish</h3>
-                <p class="text-xs text-gray-400">Nostr Notes </p>
+                <p class="text-xs text-gray-400">Nostr Notes</p>
             </div>
             
             <!-- Purchased -->
             <div class="flex flex-col items-center bg-gray-800 rounded-lg p-4 hover:bg-gray-750 transition-colors">
-                <div class="bg-pink-500 bg-opacity-20 p-3 rounded-lg mb-2">
-                    <svg class="w-6 h-6 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                    </svg>
+                <div class="bg-blue-500 bg-opacity-20 p-3 rounded-lg mb-2">
+                    <i class="fas fa-shopping-cart text-blue-400 text-2xl"></i>
                 </div>
                 <h3 class="font-medium text-sm">Purchased</h3>
                 <p class="text-xs text-gray-400">zPay Items</p>
@@ -88,19 +179,19 @@
 
         <!-- Navigation Tabs -->
         <div class="flex space-x-2 mb-4 border-b border-gray-700">
-            <button class="px-3 py-2 text-sm text-purple-400 border-b-2 border-purple-400">All</button>
+            <button class="px-3 py-2 text-sm text-blue-400 border-b-2 border-blue-400">All</button>
             <button class="px-3 py-2 text-sm text-gray-400 hover:text-gray-200">Utilities</button>
             <button class="px-3 py-2 text-sm text-gray-400 hover:text-gray-200">Lightning</button>
             <button class="px-3 py-2 text-sm text-gray-400 hover:text-gray-200">Social</button>
-            
         </div>
 
         <!-- Apps Grid -->
-        <div class="app-grid " id="appsGrid">
+        <div class="app-grid" id="appsGrid">
             <!-- Apps will be dynamically added here -->
         </div>
     </div>
 
+    <!-- Original App Script -->
     <script>
         // Sample apps data - replace with your own websites
         const apps = [
@@ -131,7 +222,7 @@
             {
                 name: 'nSearch',
                 icon: '🔍',
-                bgColor: 'bg-purple-500',
+                bgColor: 'bg-blue-500',
                 url: '#'
             },
             {
@@ -176,6 +267,40 @@
                 app.name.toLowerCase().includes(searchTerm)
             );
             document.getElementById('appsGrid').innerHTML = filteredApps.map(createAppCard).join('');
+        });
+    </script>
+
+    <!-- PWA Install Script -->
+    <script>
+        let deferredPrompt;
+        const pwaPrompt = document.getElementById('pwaInstallPrompt');
+        const pwaButton = document.getElementById('pwaInstallButton');
+
+        // Check if already installed
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            pwaPrompt.style.display = 'none';
+        } else {
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                pwaPrompt.style.display = 'flex';
+            });
+
+            pwaButton.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        pwaPrompt.style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                }
+            });
+        }
+
+        // Hide prompt if installed
+        window.addEventListener('appinstalled', () => {
+            pwaPrompt.style.display = 'none';
         });
     </script>
 </body>
